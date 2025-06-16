@@ -11,7 +11,7 @@
 
     - name: Extract only the version into a variable
       ansible.builtin.set_fact:
-        yazi_installed_version: "{{ (yazi_installed_version_cmd.stdout | regex_search('version=([\\d.]+)', '\\1'))[0] | default('') }}"
+        yazi_installed_version: "{{ yazi_installed_version_cmd.stdout | regex_replace('^.*?([\\d\\.]{2,}).*$', '\\1') }}"
 
     - name: Debug installed yazi version
       ansible.builtin.debug:
