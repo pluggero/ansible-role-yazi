@@ -1,0 +1,15 @@
+---
+yazi_dep_pkgs:
+  - unzip
+  - ffmpeg
+  - 7zip
+  - jq
+  - poppler
+  - fd
+  - ripgrep
+  - fzf
+  - zoxide
+  - imagemagick
+
+yazi_distro_pkgs:
+  - yazi

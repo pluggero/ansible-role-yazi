@@ -1,0 +1,14 @@
+---
+yazi_version: "25.5.28"
+yazi_install_method: "dynamic"
+yazi_force_install: false
+
+yazi_rustup_role: "pluggero.rustup"
+
+# If installed from source
+yazi_download_url: "https://github.com/sxyazi/yazi/archive/refs/tags/v{{ yazi_version }}.tar.gz"
+yazi_download_dir: "/tmp"
+
+yazi_install_dir: "/opt"
+yazi_install_folder: "yazi-{{ yazi_version }}"
+yazi_install_path: "{{ yazi_install_dir }}/{{ yazi_install_folder }}"

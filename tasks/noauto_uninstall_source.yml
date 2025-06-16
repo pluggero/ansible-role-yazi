@@ -1,0 +1,16 @@
+---
+- name: Uninstall yazi from source
+  block:
+    - name: Include rustup role
+      ansible.builtin.include_role:
+        name: "{{ yazi_rustup_role }}"
+
+    - name: Uninstall yazi
+      ansible.builtin.command:
+        cmd: "cargo uninstall yazi"
+      environment:
+        PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+      failed_when: false
+      ignore_errors: true
+      register: alacirty_uninstall_cargo_cmd
+      changed_when: "'Removing' in yazi_uninstall_cargo_cmd.stdout"

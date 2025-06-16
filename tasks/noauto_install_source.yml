@@ -1,0 +1,72 @@
+---
+- name: Ensure yazi is installed
+  block:
+    - name: Import installed yazi version check
+      ansible.builtin.include_tasks: noauto_check_installed_version.yml
+      when: yazi_installed_version is not defined
+
+    - name: Force install if the version numbers do not match
+      ansible.builtin.set_fact:
+        yazi_force_install: true
+      when:
+        - yazi_installed_version is defined
+        - yazi_installed_version != yazi_version
+
+    - name: Install yazi from source
+      when: yazi_installed_version is not defined or yazi_force_install
+      block:
+        - name: Uninstall current yazi installation
+          ansible.builtin.include_tasks: noauto_uninstall.yml
+          when: yazi_installed_version is defined and yazi_installed_version != ""
+
+        - name: Debug yazi_version
+          ansible.builtin.debug:
+            var: yazi_version
+
+        - name: Include rustup role
+          ansible.builtin.include_role:
+            name: "{{ yazi_rustup_role }}"
+
+        - name: Download yazi
+          ansible.builtin.get_url:
+            url: "{{ yazi_download_url }}"
+            dest: "{{ yazi_download_dir }}/yazi-{{ yazi_version }}.tar.gz"
+            mode: "0600"
+            owner: "{{ ansible_user }}"
+            group: "{{ ansible_user }}"
+
+        - name: Extract archive
+          ansible.builtin.unarchive:
+            src: "{{ yazi_download_dir }}/yazi-{{ yazi_version }}.tar.gz"
+            dest: "{{ yazi_download_dir }}/"
+            remote_src: true
+
+        - name: Build yazi
+          ansible.builtin.command:
+            cmd: "cargo build --release"
+            chdir: "{{ yazi_download_dir }}/yazi-{{ yazi_version }}"
+          environment:
+            PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+          changed_when: true
+
+        - name: Install packages
+          ansible.builtin.command:
+            cmd: "cargo install --path {{ yazi_download_dir }}/yazi-{{ yazi_version }}/{{ package }}"
+          environment:
+            PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+          loop:
+            - yazi-cli
+            - yazi-fm
+          loop_control:
+            loop_var: package
+          changed_when: true
+
+        - name: Remove build directory
+          ansible.builtin.file:
+            path: "{{ yazi_download_dir }}/yazi-{{ yazi_version }}"
+            state: absent
+
+        - name: Remove archive
+          ansible.builtin.file:
+            path: "{{ yazi_download_dir }}/yazi-{{ yazi_version }}.tar.gz"
+            state: absent
