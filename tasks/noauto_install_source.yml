@@ -19,10 +19,6 @@
           ansible.builtin.include_tasks: noauto_uninstall.yml
           when: yazi_installed_version is defined and yazi_installed_version != ""
 
-        - name: Debug yazi_version
-          ansible.builtin.debug:
-            var: yazi_version
-
         - name: Include rustup role
           ansible.builtin.include_role:
             name: "{{ yazi_rustup_role }}"
