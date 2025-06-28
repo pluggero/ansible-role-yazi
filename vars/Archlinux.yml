@@ -10,6 +10,7 @@ yazi_dep_pkgs:
   - fzf
   - zoxide
   - imagemagick
+  - ueberzugpp
 
 yazi_distro_pkgs:
   - yazi
