@@ -13,6 +13,9 @@
 
     - name: Ensure yazi is installed
       community.general.pacman:
-        name: "{{ yazi_distro_pkgs }}"
+        name: "{{ package }}"
         state: present
+      loop: "{{ yazi_distro_pkgs }}"
+      loop_control:
+        loop_var: package
       become: true
