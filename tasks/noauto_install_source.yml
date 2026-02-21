@@ -39,7 +39,7 @@
 
         - name: Build yazi
           ansible.builtin.command:
-            cmd: "cargo build --release"
+            cmd: "cargo build --release --locked"
             chdir: "{{ yazi_download_dir }}/yazi-{{ yazi_version }}"
           environment:
             PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
@@ -47,7 +47,7 @@
 
         - name: Install packages
           ansible.builtin.command:
-            cmd: "cargo install --path {{ yazi_download_dir }}/yazi-{{ yazi_version }}/{{ package }}"
+            cmd: "cargo install --path {{ yazi_download_dir }}/yazi-{{ yazi_version }}/{{ package }} --locked"
           environment:
             PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
           loop:
