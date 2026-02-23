@@ -12,5 +12,5 @@
         PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
       failed_when: false
       ignore_errors: true
-      register: alacirty_uninstall_cargo_cmd
+      register: yazi_uninstall_cargo_cmd
       changed_when: "'Removing' in yazi_uninstall_cargo_cmd.stdout"
