@@ -13,3 +13,5 @@ yazi_download_dir: "/tmp"
 yazi_install_dir: "/opt"
 yazi_install_folder: "yazi-{{ yazi_version }}"
 yazi_install_path: "{{ yazi_install_dir }}/{{ yazi_install_folder }}"
+
+yazi_become_user: ""
