@@ -42,20 +42,24 @@
             cmd: "cargo build --release --locked"
             chdir: "{{ yazi_download_dir }}/yazi-{{ yazi_version }}"
           environment:
-            PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+            PATH: "{{ yazi_cargo_dir }}/bin:{{ ansible_env.PATH }}"
           changed_when: true
+          become: "{{ true if yazi_become_user else false }}"
+          become_user: "{{ yazi_become_user }}"
 
         - name: Install packages
           ansible.builtin.command:
             cmd: "cargo install --path {{ yazi_download_dir }}/yazi-{{ yazi_version }}/{{ package }} --locked"
           environment:
-            PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+            PATH: "{{ yazi_cargo_dir }}/bin:{{ ansible_env.PATH }}"
           loop:
             - yazi-cli
             - yazi-fm
           loop_control:
             loop_var: package
           changed_when: true
+          become: "{{ true if yazi_become_user else false }}"
+          become_user: "{{ yazi_become_user }}"
 
         - name: Remove build directory
           ansible.builtin.file:

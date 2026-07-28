@@ -5,11 +5,13 @@
       ansible.builtin.command:
         cmd: "yazi --version"
       environment:
-        PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+        PATH: "{{ yazi_cargo_dir }}/bin:{{ ansible_env.PATH }}"
       ignore_errors: true
       changed_when: false
       failed_when: false
       register: yazi_installed_version_cmd
+      become: "{{ true if yazi_become_user else false }}"
+      become_user: "{{ yazi_become_user }}"
 
     - name: Extract only the version into a variable
       ansible.builtin.set_fact:
